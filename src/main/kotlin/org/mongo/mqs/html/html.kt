@@ -82,9 +82,9 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
                 td { classes = tdClasses; +stat.key.queryShape.command }
                 td { classes = tdClasses; +stat.key.queryShape.query() }
                 td { classes = tdClasses; +stat.metrics.execCount.toString() }
-                td { classes = tdClasses; +stat.metrics.totalExecMicros.avgMs(stat) }
-                td { classes = tdClasses; +stat.metrics.totalExecMicros.maxMs }
-                td { classes = tdClasses; +stat.metrics.totalExecMicros.minMs }
+                td { classes = tdClasses; +"${stat.metrics.totalExecMicros.avgMs(stat)} ms" }
+                td { classes = tdClasses; +"${stat.metrics.totalExecMicros.maxMs} ms" }
+                td { classes = tdClasses; +"${stat.metrics.totalExecMicros.minMs} ms" }
                 td { classes = tdClasses; +stat.metrics.targetingScore.pretty }
             }
         }

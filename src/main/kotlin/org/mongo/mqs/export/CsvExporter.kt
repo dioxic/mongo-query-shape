@@ -27,9 +27,9 @@ fun List<QueryStat>.toCsv(): String {
             stat.key.queryShape.command,
             stat.key.queryShape.query(),
             stat.metrics.execCount.toString(),
-            stat.metrics.totalExecMicros.avgMs(stat),
-            stat.metrics.totalExecMicros.maxMs,
-            stat.metrics.totalExecMicros.minMs,
+            stat.metrics.totalExecMicros.avgMs(stat).toString(),
+            stat.metrics.totalExecMicros.maxMs.toString(),
+            stat.metrics.totalExecMicros.minMs.toString(),
             stat.metrics.targetingScore.pretty
         ).joinToString(",") { escapeCsv(it) }
     }

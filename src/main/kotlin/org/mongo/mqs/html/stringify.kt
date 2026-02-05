@@ -28,10 +28,10 @@ val QueryStat.shortHash
 
 fun MetricStats.avgMs(queryStat: QueryStat) = avgMs(queryStat.metrics.execCount)
 
-fun MetricStats.avgMs(executionCount: Long) = "${(sum / executionCount) / 1000} ms"
+fun MetricStats.avgMs(executionCount: Long) = (sum / executionCount) / 1000
 
-val MetricStats.maxMs get() = "${max / 1000} ms"
-val MetricStats.minMs get() = "${min / 1000} ms"
+val MetricStats.maxMs get() = max / 1000
+val MetricStats.minMs get() = min / 1000
 
 val Double.pretty get() = "%.2f".format(this)
 
