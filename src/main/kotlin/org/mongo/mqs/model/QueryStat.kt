@@ -60,7 +60,11 @@ data class QueryMetrics(
     val fromPlanCache: BooleanStats,
     val firstSeenTimestamp: Instant,
     val latestSeenTimestamp: Instant
-)
+) {
+    val targetingScore: Double
+        get() = docsExamined.sum.toDouble() / docsReturned.sum.toDouble()
+
+}
 
 data class MetricStats(
     val sum: Long,

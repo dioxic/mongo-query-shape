@@ -62,7 +62,7 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
             th { classes = thClasses; +"Avg Execution" }
             th { classes = thClasses; +"Max Execution" }
             th { classes = thClasses; +"Min Execution" }
-            th { classes = thClasses; +"Bytes Read" }
+            th { classes = thClasses; +"Targeting Score" }
         }
     }
     tbody {
@@ -85,7 +85,7 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
                 td { classes = tdClasses; +stat.metrics.totalExecMicros.avgMs(stat) }
                 td { classes = tdClasses; +stat.metrics.totalExecMicros.maxMs }
                 td { classes = tdClasses; +stat.metrics.totalExecMicros.minMs }
-                td { classes = tdClasses; +stat.metrics.bytesRead.sum.toString() }
+                td { classes = tdClasses; +stat.metrics.targetingScore.pretty }
             }
         }
     }

@@ -33,6 +33,8 @@ fun MetricStats.avgMs(executionCount: Long) = "${(sum / executionCount) / 1000} 
 val MetricStats.maxMs get() = "${max / 1000} ms"
 val MetricStats.minMs get() = "${min / 1000} ms"
 
+val Double.pretty get() = "%.2f".format(this)
+
 fun List<Document>.toJson(jws: JsonWriterSettings): String {
     val separator = if (jws.isIndent) ",\n" else ", "
     return joinToString(separator, prefix = "[ ", postfix = " ]") { it.toJson(jws) }

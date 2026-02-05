@@ -3,6 +3,7 @@ package org.mongo.mqs.export
 import org.mongo.mqs.html.avgMs
 import org.mongo.mqs.html.maxMs
 import org.mongo.mqs.html.minMs
+import org.mongo.mqs.html.pretty
 import org.mongo.mqs.html.query
 import org.mongo.mqs.model.QueryStat
 
@@ -15,7 +16,8 @@ fun List<QueryStat>.toCsv(): String {
         "execCount",
         "avgMs",
         "maxMs",
-        "minMs"
+        "minMs",
+        "targetingScore"
     ).joinToString(",")
 
     val rows = this.map { stat ->
@@ -27,7 +29,8 @@ fun List<QueryStat>.toCsv(): String {
             stat.metrics.execCount.toString(),
             stat.metrics.totalExecMicros.avgMs(stat),
             stat.metrics.totalExecMicros.maxMs,
-            stat.metrics.totalExecMicros.minMs
+            stat.metrics.totalExecMicros.minMs,
+            stat.metrics.targetingScore.pretty
         ).joinToString(",") { escapeCsv(it) }
     }
 
