@@ -1,0 +1,121 @@
+{
+    "key": {
+        "queryShape": {
+            "cmdNs": {
+                "db": "local",
+                "coll": "oplog.rs"
+            },
+            "command": "aggregate",
+            "pipeline": [
+                {
+                    "$collStats": {
+                        "storageStats": {
+                            "verbose": false,
+                            "waitForLock": false,
+                            "numericOnly": true
+                        }
+                    }
+                }
+            ]
+        },
+        "collectionType": "collection",
+        "cursor": {
+            "batchSize": "?number"
+        }
+    },
+    "keyHash": "2QLBfL0m1lliStdN4XvBjqVBtZQ6ffaB2L1pJ99twT8=",
+    "queryShapeHash": "1D0D04A43DC0D262BF58287C35D5333AA389FCE43CC1C75CB9295456CB11198E",
+    "metrics": {
+        "lastExecutionMicros": 238,
+        "execCount": 19,
+        "totalExecMicros": {
+            "sum": 5602,
+            "max": 994,
+            "min": 226,
+            "sumOfSquares": {
+                "$numberDecimal": "2194856"
+            }
+        },
+        "firstResponseExecMicros": {
+            "sum": 5602,
+            "max": 994,
+            "min": 226,
+            "sumOfSquares": {
+                "$numberDecimal": "2194856"
+            }
+        },
+        "docsReturned": {
+            "sum": 19,
+            "max": 1,
+            "min": 1,
+            "sumOfSquares": {
+                "$numberDecimal": "19"
+            }
+        },
+        "keysExamined": {
+            "sum": 0,
+            "max": 0,
+            "min": 0,
+            "sumOfSquares": {
+                "$numberDecimal": "0"
+            }
+        },
+        "docsExamined": {
+            "sum": 0,
+            "max": 0,
+            "min": 0,
+            "sumOfSquares": {
+                "$numberDecimal": "0"
+            }
+        },
+        "bytesRead": {
+            "sum": 0,
+            "max": 0,
+            "min": 0,
+            "sumOfSquares": {
+                "$numberDecimal": "0"
+            }
+        },
+        "readTimeMicros": {
+            "sum": 0,
+            "max": 0,
+            "min": 0,
+            "sumOfSquares": {
+                "$numberDecimal": "0"
+            }
+        },
+        "workingTimeMillis": {
+            "sum": 0,
+            "max": 0,
+            "min": 0,
+            "sumOfSquares": {
+                "$numberDecimal": "0"
+            }
+        },
+        "hasSortStage": {
+            "true": 0,
+            "false": 19
+        },
+        "usedDisk": {
+            "true": 0,
+            "false": 19
+        },
+        "fromMultiPlanner": {
+            "true": 0,
+            "false": 19
+        },
+        "fromPlanCache": {
+            "true": 0,
+            "false": 19
+        },
+        "firstSeenTimestamp": {
+            "$date": "2026-02-05T11:56:15.002Z"
+        },
+        "latestSeenTimestamp": {
+            "$date": "2026-02-05T11:56:59Z"
+        }
+    },
+    "asOf": {
+        "$date": "2026-02-05T11:57:00.137Z"
+    }
+}
