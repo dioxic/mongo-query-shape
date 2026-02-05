@@ -22,7 +22,16 @@ data class QueryKey(
 data class QueryShape(
     val cmdNs: CommandNamespace,
     val command: String,
-    val pipeline: List<Document>? = null
+    // find
+    val filter: Document? = null,
+    val sort: Document? = null,
+    val projection: Document? = null,
+    val skip: Int? = null,
+    val limit: Int? = null,
+    // aggregation
+    val pipeline: List<Document>? = null,
+    // distinct & count
+    val query: Document? = null,
 )
 
 data class CommandNamespace(
