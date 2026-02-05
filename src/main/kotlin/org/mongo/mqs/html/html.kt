@@ -1,6 +1,9 @@
 package org.mongo.mqs.html
 
 import kotlinx.html.*
+import org.bson.Document
+import org.bson.json.JsonWriterSettings
+import org.mongo.mqs.model.QueryShape
 import org.mongo.mqs.model.QueryStat
 
 fun HTML.tableHtml(queryStats: List<QueryStat>) {
@@ -44,8 +47,9 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
                 "text-gray-500", "uppercase", "tracking-wider"
             )
             th { classes = thClasses; +"Query Shape Hash" }
-            th { classes = thClasses; +"Query" }
             th { classes = thClasses; +"Namespace" }
+            th { classes = thClasses; +"Command" }
+            th { classes = thClasses; +"Query" }
             th { classes = thClasses; +"Execution Count" }
             th { classes = thClasses; +"Total Exec Micros" }
             th { classes = thClasses; +"Bytes Read" }
@@ -61,6 +65,8 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
                     classes = tdClasses
                     +"${stat.key.queryShape.cmdNs.db}.${stat.key.queryShape.cmdNs.coll}"
                 }
+                td { classes = tdClasses; +stat.key.queryShape.command }
+                td { classes = tdClasses; +stat.key.queryShape.prettyQuery() }
                 td { classes = tdClasses; +stat.metrics.execCount.toString() }
                 td { classes = tdClasses; +stat.metrics.totalExecMicros.sum.toString() }
                 td { classes = tdClasses; +stat.metrics.bytesRead.sum.toString() }
