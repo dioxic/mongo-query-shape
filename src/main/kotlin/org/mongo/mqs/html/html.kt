@@ -51,7 +51,9 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
             th { classes = thClasses; +"Command" }
             th { classes = thClasses; +"Query" }
             th { classes = thClasses; +"Execution Count" }
-            th { classes = thClasses; +"Total Exec Micros" }
+            th { classes = thClasses; +"Avg Execution" }
+            th { classes = thClasses; +"Max Execution" }
+            th { classes = thClasses; +"Min Execution" }
             th { classes = thClasses; +"Bytes Read" }
         }
     }
@@ -60,7 +62,11 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
         queryStats.forEach { stat ->
             tr {
                 val tdClasses = setOf("px-6", "py-4", "whitespace-nowrap", "text-sm", "text-gray-900")
-                td { classes = tdClasses; +stat.queryShapeHash }
+                td {
+                    classes = tdClasses
+                    title = stat.queryShapeHash
+                    +stat.shortHash
+                }
                 td {
                     classes = tdClasses
                     +"${stat.key.queryShape.cmdNs.db}.${stat.key.queryShape.cmdNs.coll}"
@@ -68,7 +74,9 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
                 td { classes = tdClasses; +stat.key.queryShape.command }
                 td { classes = tdClasses; +stat.key.queryShape.prettyQuery() }
                 td { classes = tdClasses; +stat.metrics.execCount.toString() }
-                td { classes = tdClasses; +stat.metrics.totalExecMicros.sum.toString() }
+                td { classes = tdClasses; +stat.metrics.totalExecMicros.avgMs(stat) }
+                td { classes = tdClasses; +stat.metrics.totalExecMicros.maxMs }
+                td { classes = tdClasses; +stat.metrics.totalExecMicros.minMs }
                 td { classes = tdClasses; +stat.metrics.bytesRead.sum.toString() }
             }
         }
