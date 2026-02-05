@@ -1,9 +1,6 @@
 package org.mongo.mqs.html
 
 import kotlinx.html.*
-import org.bson.Document
-import org.bson.json.JsonWriterSettings
-import org.mongo.mqs.model.QueryShape
 import org.mongo.mqs.model.QueryStat
 
 fun HTML.tableHtml(queryStats: List<QueryStat>) {
@@ -18,14 +15,25 @@ fun HTML.tableHtml(queryStats: List<QueryStat>) {
             classes = setOf("text-3xl", "font-bold", "mb-6", "text-gray-800")
             +"Query Statistics"
         }
-        button {
-            classes = setOf(
-                "mb-6", "px-4", "py-2", "bg-blue-600", "text-white",
-                "rounded-lg", "hover:bg-blue-700", "transition-colors", "duration-200"
-            )
-            attributes["hx-get"] = "/stats"
-            attributes["hx-target"] = "#stats-table"
-            +"Refresh"
+        div {
+            classes = setOf("flex", "space-x-4", "mb-6")
+            button {
+                classes = setOf(
+                    "px-4", "py-2", "bg-blue-600", "text-white",
+                    "rounded-lg", "hover:bg-blue-700", "transition-colors", "duration-200"
+                )
+                attributes["hx-get"] = "/stats"
+                attributes["hx-target"] = "#stats-table"
+                +"Refresh"
+            }
+            a {
+                href = "/csv"
+                classes = setOf(
+                    "px-4", "py-2", "bg-green-600", "text-white",
+                    "rounded-lg", "hover:bg-green-700", "transition-colors", "duration-200"
+                )
+                +"Download CSV"
+            }
         }
         div {
             id = "stats-table"
@@ -72,7 +80,7 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
                     +"${stat.key.queryShape.cmdNs.db}.${stat.key.queryShape.cmdNs.coll}"
                 }
                 td { classes = tdClasses; +stat.key.queryShape.command }
-                td { classes = tdClasses; +stat.key.queryShape.prettyQuery() }
+                td { classes = tdClasses; +stat.key.queryShape.query() }
                 td { classes = tdClasses; +stat.metrics.execCount.toString() }
                 td { classes = tdClasses; +stat.metrics.totalExecMicros.avgMs(stat) }
                 td { classes = tdClasses; +stat.metrics.totalExecMicros.maxMs }

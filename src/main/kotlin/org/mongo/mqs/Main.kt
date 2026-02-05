@@ -1,13 +1,15 @@
 package org.mongo.mqs
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
-import io.ktor.server.html.respondHtml
+import io.ktor.server.html.*
 import io.ktor.server.netty.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.html.*
 import kotlinx.html.stream.createHTML
+import kotlinx.html.table
+import org.mongo.mqs.export.toCsv
 import org.mongo.mqs.html.queryStatsTable
 import org.mongo.mqs.html.tableHtml
 import org.mongo.mqs.repository.QueryStatRepository
@@ -30,10 +32,23 @@ fun Application.module() {
         get("/stats") {
             val queryStats = repository.getQueryStats()
             call.respondText(
-                createHTML().table {
+                contentType = ContentType.Text.Html,
+                text = createHTML().table {
                     queryStatsTable(queryStats)
                 },
-                io.ktor.http.ContentType.Text.Html
+            )
+        }
+        get("/csv") {
+            val queryStats = repository.getQueryStats()
+            call.response.header(
+                HttpHeaders.ContentDisposition,
+                ContentDisposition.Attachment.withParameter(
+                    ContentDisposition.Parameters.FileName, "query-stats.csv"
+                ).toString()
+            )
+            call.respondText(
+                contentType = ContentType.Text.CSV,
+                text = queryStats.toCsv()
             )
         }
     }
