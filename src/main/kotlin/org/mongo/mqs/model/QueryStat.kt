@@ -40,8 +40,8 @@ data class QueryShape(
     val filter: Document? = null,
     val sort: Document? = null,
     val projection: Document? = null,
-    val skip: Int? = null,
-    val limit: Int? = null,
+    val skip: String? = null,
+    val limit: String? = null,
     // aggregation
     val pipeline: List<Document>? = null,
     // distinct & count
