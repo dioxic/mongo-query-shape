@@ -11,7 +11,7 @@ class Csv : CliktCommand(name = "csv") {
 
     override fun run() {
         val repository = QueryStatRepository()
-        val queryStats = repository.getQueryStats()
+        val queryStats = repository.execute()
         val csvContent = queryStats.toCsv()
 
         if (output != null) {

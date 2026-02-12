@@ -5,33 +5,36 @@ import org.mongo.mqs.html.maxMs
 import org.mongo.mqs.html.minMs
 import org.mongo.mqs.html.pretty
 import org.mongo.mqs.html.query
+import org.mongo.mqs.model.QueryShapeColumnVisibility
 import org.mongo.mqs.model.QueryStat
 
-fun List<QueryStat>.toCsv(): String {
-    val header = listOf(
-        "hash",
-        "namespace",
-        "command",
-        "query",
-        "execCount",
-        "avgMs",
-        "maxMs",
-        "minMs",
-        "targetingScore"
-    ).joinToString(",")
+fun List<QueryStat>.toCsv(
+    columnVisibility: QueryShapeColumnVisibility = QueryShapeColumnVisibility.Default
+): String {
+    val header = buildList {
+        add("hash")
+        add("namespace")
+        add("command")
+        add("query")
+        if (columnVisibility.execCount) add("execCount")
+        if (columnVisibility.avgExec) add("avgMs")
+        if (columnVisibility.maxExec) add("maxMs")
+        if (columnVisibility.minExec) add("minMs")
+        if (columnVisibility.targetScore) add("targetingScore")
+    }.joinToString(",")
 
     val rows = this.map { stat ->
-        listOf(
-            stat.queryShapeHash,
-            "${stat.key.queryShape.cmdNs.db}.${stat.key.queryShape.cmdNs.coll}",
-            stat.key.queryShape.command,
-            stat.key.queryShape.query(),
-            stat.metrics.execCount.toString(),
-            stat.metrics.totalExecMicros.avgMs(stat).toString(),
-            stat.metrics.totalExecMicros.maxMs.toString(),
-            stat.metrics.totalExecMicros.minMs.toString(),
-            stat.metrics.targetingScore.pretty
-        ).joinToString(",") { escapeCsv(it) }
+        buildList {
+            add(stat.queryShapeHash)
+            add("${stat.key.queryShape.cmdNs.db}.${stat.key.queryShape.cmdNs.coll}")
+            add(stat.key.queryShape.command)
+            add(stat.key.queryShape.query())
+            if (columnVisibility.execCount) add(stat.metrics.execCount.toString())
+            if (columnVisibility.avgExec) add(stat.metrics.totalExecMicros.avgMs(stat).toString())
+            if (columnVisibility.maxExec) add(stat.metrics.totalExecMicros.maxMs.toString())
+            if (columnVisibility.minExec) add(stat.metrics.totalExecMicros.minMs.toString())
+            if (columnVisibility.targetScore) add(stat.metrics.targetingScore.pretty)
+        }.joinToString(",") { escapeCsv(it) }
     }
 
     return (listOf(header) + rows).joinToString("\n")

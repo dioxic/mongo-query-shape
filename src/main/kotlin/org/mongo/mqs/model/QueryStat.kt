@@ -11,7 +11,21 @@ data class QueryStat(
     val queryShapeHash: String,
     val metrics: QueryMetrics,
     val asOf: Instant
-)
+) {
+    companion object {
+        val HEADERS = listOf(
+            "Query Shape Hash",
+            "Namespace",
+            "Command",
+            "Query",
+            "Execution Count",
+            "Avg Execution",
+            "Max Execution",
+            "Min Execution",
+            "Targeting Score"
+        )
+    }
+}
 
 data class QueryKey(
     val queryShape: QueryShape,
