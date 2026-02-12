@@ -3,7 +3,14 @@ package org.mongo.mqs.html
 import kotlinx.html.*
 import org.mongo.mqs.model.QueryStat
 
-fun HTML.tableHtml(queryStats: List<QueryStat>) {
+fun HTML.tableHtml(
+    queryStats: List<QueryStat>,
+    execCount: Boolean = true,
+    avgExec: Boolean = true,
+    maxExec: Boolean = true,
+    minExec: Boolean = true,
+    targetScore: Boolean = true
+) {
     head {
         title { +"Query Stats" }
         script { src = "https://unpkg.com/htmx.org@2.0.4" }
@@ -24,6 +31,7 @@ fun HTML.tableHtml(queryStats: List<QueryStat>) {
                 )
                 attributes["hx-get"] = "/stats"
                 attributes["hx-target"] = "#stats-table"
+                attributes["hx-include"] = "#column-selectors"
                 +"Refresh"
             }
             a {
@@ -36,17 +44,51 @@ fun HTML.tableHtml(queryStats: List<QueryStat>) {
             }
         }
         div {
+            id = "column-selectors"
+            classes = setOf("flex", "space-x-4", "mb-6", "bg-white", "p-4", "rounded-lg", "shadow-sm")
+            columnSelector("execCount", "Execution Count", execCount)
+            columnSelector("avgExec", "Avg Execution", avgExec)
+            columnSelector("maxExec", "Max Execution", maxExec)
+            columnSelector("minExec", "Min Execution", minExec)
+            columnSelector("targetScore", "Targeting Score", targetScore)
+        }
+        div {
             id = "stats-table"
             classes = setOf("overflow-x-auto", "bg-white", "rounded-lg", "shadow")
             table {
                 classes = setOf("min-w-full", "divide-y", "divide-gray-200")
-                queryStatsTable(queryStats)
+                queryStatsTable(queryStats, execCount, avgExec, maxExec, minExec, targetScore)
             }
         }
     }
 }
 
-fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
+fun DIV.columnSelector(name: String, labelText: String, checked: Boolean) {
+    label {
+        classes = setOf("flex", "items-center", "space-x-2", "cursor-pointer")
+        input(type = InputType.checkBox, name = name) {
+            classes = setOf("form-checkbox", "h-5", "w-5", "text-blue-600")
+            if (checked) attributes["checked"] = "checked"
+            attributes["hx-get"] = "/stats"
+            attributes["hx-target"] = "#stats-table"
+            attributes["hx-include"] = "#column-selectors"
+            attributes["hx-trigger"] = "change"
+        }
+        span {
+            classes = setOf("text-gray-700", "font-medium")
+            +labelText
+        }
+    }
+}
+
+fun TABLE.queryStatsTable(
+    queryStats: List<QueryStat>,
+    execCount: Boolean = true,
+    avgExec: Boolean = true,
+    maxExec: Boolean = true,
+    minExec: Boolean = true,
+    targetScore: Boolean = true
+) {
     thead {
         classes = setOf("bg-gray-50")
         tr {
@@ -58,11 +100,11 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
             th { classes = thClasses; +"Namespace" }
             th { classes = thClasses; +"Command" }
             th { classes = thClasses; +"Query" }
-            th { classes = thClasses; +"Execution Count" }
-            th { classes = thClasses; +"Avg Execution" }
-            th { classes = thClasses; +"Max Execution" }
-            th { classes = thClasses; +"Min Execution" }
-            th { classes = thClasses; +"Targeting Score" }
+            if (execCount) th { classes = thClasses; +"Execution Count" }
+            if (avgExec) th { classes = thClasses; +"Avg Execution" }
+            if (maxExec) th { classes = thClasses; +"Max Execution" }
+            if (minExec) th { classes = thClasses; +"Min Execution" }
+            if (targetScore) th { classes = thClasses; +"Targeting Score" }
         }
     }
     tbody {
@@ -81,11 +123,11 @@ fun TABLE.queryStatsTable(queryStats: List<QueryStat>) {
                 }
                 td { classes = tdClasses; +stat.key.queryShape.command }
                 td { classes = tdClasses; +stat.key.queryShape.query() }
-                td { classes = tdClasses; +stat.metrics.execCount.toString() }
-                td { classes = tdClasses; +"${stat.metrics.totalExecMicros.avgMs(stat)} ms" }
-                td { classes = tdClasses; +"${stat.metrics.totalExecMicros.maxMs} ms" }
-                td { classes = tdClasses; +"${stat.metrics.totalExecMicros.minMs} ms" }
-                td { classes = tdClasses; +stat.metrics.targetingScore.pretty }
+                if (execCount) td { classes = tdClasses; +stat.metrics.execCount.toString() }
+                if (avgExec) td { classes = tdClasses; +"${stat.metrics.totalExecMicros.avgMs(stat)} ms" }
+                if (maxExec) td { classes = tdClasses; +"${stat.metrics.totalExecMicros.maxMs} ms" }
+                if (minExec) td { classes = tdClasses; +"${stat.metrics.totalExecMicros.minMs} ms" }
+                if (targetScore) td { classes = tdClasses; +stat.metrics.targetingScore.pretty }
             }
         }
     }

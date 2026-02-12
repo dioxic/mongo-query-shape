@@ -28,10 +28,16 @@ fun Application.module() {
         }
         get("/stats") {
             val queryStats = repository.getQueryStats()
+            val execCount = call.parameters["execCount"] == "on"
+            val avgExec = call.parameters["avgExec"] == "on"
+            val maxExec = call.parameters["maxExec"] == "on"
+            val minExec = call.parameters["minExec"] == "on"
+            val targetScore = call.parameters["targetScore"] == "on"
+
             call.respondText(
                 contentType = ContentType.Text.Html,
                 text = createHTML().table {
-                    queryStatsTable(queryStats)
+                    queryStatsTable(queryStats, execCount, avgExec, maxExec, minExec, targetScore)
                 },
             )
         }
@@ -39,7 +45,7 @@ fun Application.module() {
             val queryStats = repository.getQueryStats()
             call.response.header(
                 HttpHeaders.ContentDisposition,
-                ContentDisposition.Companion.Attachment.withParameter(
+                ContentDisposition.Attachment.withParameter(
                     ContentDisposition.Parameters.FileName, "query-stats.csv"
                 ).toString()
             )
