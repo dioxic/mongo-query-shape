@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.3.0"
+    kotlin("plugin.serialization") version "2.3.0"
     id("com.github.ben-manes.versions") version "0.53.0"
     application
 }
@@ -16,11 +17,16 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("io.ktor:ktor-server-html-builder-jvm")
+    implementation("io.ktor:ktor-client-core-jvm")
+    implementation("io.ktor:ktor-client-cio-jvm")
+    implementation("io.ktor:ktor-client-content-negotiation-jvm")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("com.github.ajalt.clikt:clikt:5.1.0")
     implementation(platform("org.mongodb:mongodb-driver-bom:5.6.1"))
     implementation("org.mongodb:mongodb-driver-kotlin-sync")
     implementation("org.slf4j:slf4j-api:2.0.16")
     implementation("ch.qos.logback:logback-classic:1.5.27")
+    testImplementation("io.ktor:ktor-client-mock-jvm")
     testImplementation(kotlin("test"))
 }
 
