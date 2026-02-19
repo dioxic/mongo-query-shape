@@ -22,6 +22,7 @@ data class QueryStat(
             "Avg Execution",
             "Max Execution",
             "Min Execution",
+            "Collection Scan",
             "Targeting Score"
         )
     }
@@ -78,6 +79,8 @@ data class QueryMetrics(
     val targetingScore: Double
         get() = docsExamined.sum.toDouble() / docsReturned.sum.toDouble()
 
+    val collScan: Boolean
+        get() = keysExamined.sum == 0L && docsExamined.sum > 0L
 }
 
 data class MetricStats(

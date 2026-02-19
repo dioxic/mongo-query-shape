@@ -35,6 +35,8 @@ val MetricStats.minMs get() = min / 1000
 
 val Double.pretty get() = "%.2f".format(this)
 
+val Boolean.pretty get() = if (this) "yes" else "no"
+
 fun List<Document>.toJson(jws: JsonWriterSettings): String {
     val separator = if (jws.isIndent) ",\n" else ", "
     return joinToString(separator, prefix = "[ ", postfix = " ]") { it.toJson(jws) }

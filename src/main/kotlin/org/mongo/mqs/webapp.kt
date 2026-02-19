@@ -70,5 +70,6 @@ val RoutingCall.queryShapeVisibility
         avgExec = parameters["avgExec"] == "on",
         maxExec = parameters["maxExec"] == "on",
         minExec = parameters["minExec"] == "on",
+        collScan = parameters["collScan"] == "on",
         targetScore = parameters["targetScore"] == "on",
     )

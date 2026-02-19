@@ -77,6 +77,7 @@ fun HTML.tableHtml(
                 columnSelector("avgExec", "Avg Execution", columnVisibility.avgExec)
                 columnSelector("maxExec", "Max Execution", columnVisibility.maxExec)
                 columnSelector("minExec", "Min Execution", columnVisibility.minExec)
+                columnSelector("collScan", "Collection Scan", columnVisibility.collScan)
                 columnSelector("targetScore", "Targeting Score", columnVisibility.targetScore)
             }
         }
@@ -120,6 +121,7 @@ fun List<QueryStat>.toRowMap(columnVisibility: QueryShapeColumnVisibility = Quer
             if (columnVisibility.avgExec) put("Avg Execution", "${stat.metrics.totalExecMicros.avgMs(stat)} ms")
             if (columnVisibility.maxExec) put("Max Execution", "${stat.metrics.totalExecMicros.maxMs} ms")
             if (columnVisibility.minExec) put("Min Execution", "${stat.metrics.totalExecMicros.minMs} ms")
+            if (columnVisibility.collScan) put("Collection Scan", stat.metrics.collScan.pretty)
             if (columnVisibility.targetScore) put("Targeting Score", stat.metrics.targetingScore.pretty)
         }
     }

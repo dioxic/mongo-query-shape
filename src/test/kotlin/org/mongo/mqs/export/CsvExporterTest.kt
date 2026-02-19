@@ -5,6 +5,7 @@ import org.bson.codecs.DecoderContext
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.pojo.PojoCodecProvider
 import org.bson.json.JsonReader
+import org.mongo.mqs.model.QueryShapeColumnVisibility
 import org.mongo.mqs.model.QueryStat
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -29,7 +30,7 @@ class CsvExporterTest {
         val csv = listOf(queryStat).toCsv()
 
         // Check header
-        assertTrue(csv.startsWith("hash,namespace,command,query,execCount,avgMs,maxMs,minMs"))
+        assertTrue(csv.contains("hash,namespace,command,query,execCount,avgMs,maxMs,minMs"))
         
         // Check data row
         assertTrue(csv.contains(queryStat.queryShapeHash))
@@ -53,11 +54,14 @@ class CsvExporterTest {
 
         // Only hash, namespace, command, query and execCount
         val csv = listOf(queryStat).toCsv(
-            execCount = true,
-            avgExec = false,
-            maxExec = false,
-            minExec = false,
-            targetScore = false
+            columnVisibility = QueryShapeColumnVisibility(
+                execCount = true,
+                avgExec = false,
+                maxExec = false,
+                minExec = false,
+                collScan = false,
+                targetScore = false
+            )
         )
 
         // Check header

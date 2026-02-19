@@ -5,6 +5,7 @@ data class QueryShapeColumnVisibility(
     val avgExec: Boolean,
     val maxExec: Boolean,
     val minExec: Boolean,
+    val collScan: Boolean,
     val targetScore: Boolean,
 ) {
     fun filter(input: List<String>): List<String> = input.filter {
@@ -13,6 +14,7 @@ data class QueryShapeColumnVisibility(
             "Avg Execution" if !avgExec -> false
             "Max Execution" if !maxExec -> false
             "Min Execution" if !minExec -> false
+            "Collection Scan" if !collScan -> false
             "Targeting Score" if !targetScore -> false
             else -> true
         }
@@ -24,6 +26,7 @@ data class QueryShapeColumnVisibility(
             avgExec = true,
             maxExec = true,
             minExec = true,
+            collScan = true,
             targetScore = true
         )
     }
