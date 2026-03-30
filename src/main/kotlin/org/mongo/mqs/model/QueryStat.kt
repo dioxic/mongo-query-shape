@@ -61,14 +61,14 @@ data class CursorInfo(
 data class QueryMetrics(
     val lastExecutionMicros: Long,
     val execCount: Long,
-    val totalExecMicros: MetricStats,
-    val firstResponseExecMicros: MetricStats,
-    val docsReturned: MetricStats,
-    val keysExamined: MetricStats,
-    val docsExamined: MetricStats,
-    val bytesRead: MetricStats,
-    val readTimeMicros: MetricStats,
-    val workingTimeMillis: MetricStats,
+    val totalExecMicros: QueryMetricStats,
+    val firstResponseExecMicros: QueryMetricStats,
+    val docsReturned: QueryMetricStats,
+    val keysExamined: QueryMetricStats,
+    val docsExamined: QueryMetricStats,
+    val bytesRead: QueryMetricStats,
+    val readTimeMicros: QueryMetricStats,
+    val workingTimeMillis: QueryMetricStats,
     val hasSortStage: BooleanStats,
     val usedDisk: BooleanStats,
     val fromMultiPlanner: BooleanStats,
@@ -83,7 +83,7 @@ data class QueryMetrics(
         get() = keysExamined.sum == 0L && docsExamined.sum > 0L
 }
 
-data class MetricStats(
+data class QueryMetricStats(
     val sum: Long,
     val max: Long,
     val min: Long,

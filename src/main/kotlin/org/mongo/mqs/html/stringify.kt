@@ -2,7 +2,7 @@ package org.mongo.mqs.html
 
 import org.bson.Document
 import org.bson.json.JsonWriterSettings
-import org.mongo.mqs.model.MetricStats
+import org.mongo.mqs.model.QueryMetricStats
 import org.mongo.mqs.model.QueryShape
 import org.mongo.mqs.model.QueryStat
 import kotlin.math.min
@@ -26,12 +26,12 @@ fun QueryShape.query(pretty: Boolean = false): String {
 val QueryStat.shortHash
     get() = queryShapeHash.substring(0, min(queryShapeHash.lastIndex, 10)) + "..."
 
-fun MetricStats.avgMs(queryStat: QueryStat) = avgMs(queryStat.metrics.execCount)
+fun QueryMetricStats.avgMs(queryStat: QueryStat) = avgMs(queryStat.metrics.execCount)
 
-fun MetricStats.avgMs(executionCount: Long) = (sum / executionCount) / 1000
+fun QueryMetricStats.avgMs(executionCount: Long) = (sum / executionCount) / 1000
 
-val MetricStats.maxMs get() = max / 1000
-val MetricStats.minMs get() = min / 1000
+val QueryMetricStats.maxMs get() = max / 1000
+val QueryMetricStats.minMs get() = min / 1000
 
 val Double.pretty get() = "%.2f".format(this)
 

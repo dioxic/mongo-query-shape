@@ -15,6 +15,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonClassDiscriminator
 import kotlinx.serialization.json.JsonElement
+import org.mongo.mqs.model.MetricLabels
+import org.mongo.mqs.model.MetricStats
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Instant
@@ -43,6 +45,12 @@ sealed class PrometheusData
 @Serializable
 @SerialName("matrix")
 data class PrometheusMatrixData(
+    val result: List<PrometheusResult>
+): PrometheusData()
+
+@Serializable
+@SerialName("vector")
+data class PrometheusVectorData(
     val result: List<PrometheusResult>
 ): PrometheusData()
 
@@ -82,6 +90,29 @@ class PrometheusRepository(private val baseUrl: String, engine: HttpClientEngine
         return res.data
     }
 
+    suspend fun getMetrics(
+        labels: MetricLabels,
+        start: Instant? = null,
+        end: Instant? = null
+    ): List<MetricStats> {
+        val metrics = "__name__=~\"hardware_process_cpu_normalized_user_percent|mongodb_opcounters_insert\""
+        val filters = (listOf(metrics) + labels.toList()).joinToString(separator = ",", prefix = "{", postfix = "}")
+        
+        val res = query(filters)
+        
+        return listOf(
+            MetricStats(
+                org = labels.organisation ?: "",
+                project = labels.project ?: "",
+                cluster = labels.cluster ?: "",
+                instance = labels.instance ?: "",
+                avgCpu = 4.5,
+                avgDisk = 6.7,
+                inserts = 1000.0
+            )
+        )
+    }
+
     fun close() {
         client.close()
     }
@@ -92,7 +123,7 @@ suspend fun main() {
 
     val start = Clock.System.now().minus(24.hours)
     val end = Clock.System.now()
-    val res = repo.queryRange("hardware_process_cpu_normalized_user_percent{group_id=\"5a056765c0c6e33bd1ac0cdf\"}",start, end, "60s")
+    val res = repo.queryRange("hardware_process_cpu_normalized_user_percent{group_id=\"5a05659cd383ad74f1cc1047\"}",start, end, "60s")
 
     res.errorType?.let { error(it) }
 
@@ -100,6 +131,11 @@ suspend fun main() {
         res.data.result.forEach(::println)
     }
 
+    repo.getMetrics(
+        labels = MetricLabels(
+            organisation = "5a05659cd383ad74f1cc1047",
+        )
+    ).forEach { println(it) }
 
-    println(repo.listMetrics())
+//    println(repo.listMetrics())
 }
